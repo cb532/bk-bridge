@@ -19,7 +19,8 @@ if volume == 'Hourly':
     fig = plt.figure(figsize=(12, 6))
     ax = fig.add_subplot()
 
-    ax.plot(bridge.index, bridge['pedestrians'])
+    # Convert bridge.index to a list or numpy array if it's not already one-dimensional
+    ax.plot(bridge.index.to_pydatetime(), bridge['pedestrians'])
     ax.set_title('Hourly Brooklyn Bridge Pedestrian Traffic, 10/2017-06/2018')
     ax.set_xlabel('Date')
     ax.set_ylabel('Total pedestrians per hour')
@@ -27,6 +28,7 @@ if volume == 'Hourly':
     date_form = DateFormatter('%m-%y')
     ax.xaxis.set_major_formatter(date_form)
     st.pyplot(fig)
+
 elif volume == 'Daily':
     # Extract relevant columns and store in new DataFrame crossings
     crossings = bridge[['pedestrians', 'to_manhattan', 'to_brooklyn']]
