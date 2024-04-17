@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
+import matplotlib.dates as mdates
 
 
 filename = 'brooklyn_bridge_pedestrians.csv'
@@ -16,21 +17,19 @@ volume = st.radio("Pedestrian Traffic Volume",('Hourly', 'Daily', 'Weekly'))
 st.markdown('---')
 
 if volume == 'Hourly':
-    fig = plt.figure(figsize=(12, 6))
-    ax = fig.add_subplot()
+    fig, ax = plt.subplots(figsize=(12, 6))
 
-    # Explicitly convert to numpy arrays
-    x_data = bridge.index.to_pydatetime()
-    y_data = bridge['pedestrians'].values
+    # Ensuring bridge.index is converted to numpy array of datetime objects
+    x_data = mdates.date2num(bridge.index.to_pydatetime())  # Convert pandas datetime index to matplotlib's format
+    y_data = bridge['pedestrians'].to_numpy()  # Convert pandas series to numpy array
 
-    ax.plot(x_data, y_data)
+    ax.plot_date(x_data, y_data, '-')  # Use plot_date for proper handling of dates
     ax.set_title('Hourly Brooklyn Bridge Pedestrian Traffic, 10/2017-06/2018')
     ax.set_xlabel('Date')
     ax.set_ylabel('Total pedestrians per hour')
     
-    # Define date format
-    date_form = DateFormatter('%m-%y')
-    ax.xaxis.set_major_formatter(date_form)
+    # Set the formatter for the x-axis to display dates properly
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%y'))
     
     st.pyplot(fig)
 
