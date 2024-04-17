@@ -19,16 +19,18 @@ st.markdown('---')
 if volume == 'Hourly':
     fig, ax = plt.subplots(figsize=(12, 6))
 
-    # Ensuring bridge.index is converted to numpy array of datetime objects
-    x_data = mdates.date2num(bridge.index.to_pydatetime())  # Convert pandas datetime index to matplotlib's format
-    y_data = bridge['pedestrians'].to_numpy()  # Convert pandas series to numpy array
+    # Convert bridge.index to a list of matplotlib date numbers.
+    x_data = mdates.date2num(bridge.index.to_pydatetime())
+    y_data = bridge['pedestrians'].values  # Convert to numpy array directly.
 
-    ax.plot_date(x_data, y_data, '-')  # Use plot_date for proper handling of dates
+    ax.plot(x_data, y_data)  # Now passing numpy arrays to plot.
+    
     ax.set_title('Hourly Brooklyn Bridge Pedestrian Traffic, 10/2017-06/2018')
     ax.set_xlabel('Date')
     ax.set_ylabel('Total pedestrians per hour')
     
-    # Set the formatter for the x-axis to display dates properly
+    # Set x-axis with DateFormatter
+    ax.xaxis_date()  # Set x-axis to handle date formatting.
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%y'))
     
     st.pyplot(fig)
